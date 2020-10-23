@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Подсчёт обедов</title>
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/style.css">
+  </head>
+  <body>
+    <div class="wrapper">
+      <form action="" class="data-base">
+        <h3 class="data-base__title title">
+          Загрузка базы данных по сотрудникам из 1С
+        </h3>
+        <p class="data-base__text"></p>
+        <input type="file" name="dataBase" id="dataBase" />
+      </form>
+      <form action="" class="dinners-list">
+        <h3 class="dinners-list__title title">
+          Загрузка данных по обедам в формате CSV
+        </h3>
+        <input type="file" name="dinnersList" id="dinnersList" />
+      </form>
+      <main class="main">
+        <div class="artis-block">
+          <div class="artis-block__button button-block">
+            <button type="button" class="button" onclick="getArtis()">
+              Артис
+            </button>
+          </div>
+          <div class="artis-block__output output"></div>
+        </div>
+        <div class="gwd-block">
+          <div class="gwd-block__button button-block">
+            <button type="button" class="button" onclick="getGWD()">
+              Гуд Вуд
+            </button>
+          </div>
+          <div class="gwd-block__output output"></div>
+        </div>
+        <div class="emul-block">
+          <div class="emul-block__button button-block">
+            <button type="button" class="button" onclick="getEmul()">
+              Эмульком
+            </button>
+          </div>
+          <div class="emul-block__output output"></div>
+        </div>
+      </main>
+    </div>
+    <script src="./script.js"></script>
+  </body>
+</html>
