@@ -49,7 +49,6 @@ summary {
   padding: 0.3em 0.5em 0.3em 0.4em;
   font-size: 1.1em;
   cursor: pointer;
-  
 }
 .to-right-border {
   margin-left: auto;
@@ -76,6 +75,7 @@ details {
   display: block;
   margin-bottom: 0.5rem;
 }
+
 .mark-list {
   display: flex;
   flex-direction: column;

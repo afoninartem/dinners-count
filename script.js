@@ -206,14 +206,15 @@ const printFinalData = (str, company) => {
   if (str === `Артис`) {
     const artisDnldButton = document.querySelector(`.artis-dnld`);
     artisDnldButton.addEventListener(`click`, function () {
-      let csv = `${company.name};${company.totalTolal}`;
+      let csv = `Компания;${company.name};${company.totalTolal}`;
       csv += `\n`;
       const depts = company.groups;
       depts.forEach((dept) => {
-        csv += `${dept.name};${dept.groupTotal}`;
+        csv += `Подразделение;${dept.name};${dept.groupTotal}`;
         csv += `\n`;
         dept.imps.forEach((imp) => {
-          csv += `${imp.name};${imp.total}`;
+          csv += `Сотрудник;${imp.name};${imp.total}`;
+          csv += `\n`;
         });
       });
       var hiddenElement = document.createElement("a");
