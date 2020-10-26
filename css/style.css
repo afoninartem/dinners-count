@@ -31,6 +31,11 @@ body {
   margin: 0 auto;
 }
 
+.buttons-block {
+  display: flex;
+  justify-content: space-between;
+}
+
 .buttons-block, details, summary {
   width: 400px;
 }
@@ -98,7 +103,9 @@ details {
   margin-right: 50px;
 }
 
-.hbtn {
+/* buttons start */
+
+.hbtn, .inputfile + label {
   position: relative;
   box-sizing: border-box;
   display: inline-block;
@@ -115,13 +122,11 @@ details {
   background-color: white;
 } 
 
-
-.hbtn i {
+.hbtn i, .inputfile + label {
   padding-right: 8px;
 } 
 
-
-.hb-border-bottom-br3 {
+.hb-border-bottom-br3, .inputfile + label {
   position: relative;
   transition-duration: 0.3s;
   overflow: visible;
@@ -130,8 +135,7 @@ details {
   padding: 10px 22px;
 } 
 
-
-.hb-border-bottom-br3::after {
+.hb-border-bottom-br3::after, .inputfile + label::after {
   box-sizing: border-box;
   position: absolute;
   width: 100%;
@@ -146,8 +150,7 @@ details {
   transition: border-top-width 0.1s ease 0.2s, height 0.2s ease 0.1s, width 0.2s ease 0s, margin 0.2s ease 0s;
 } 
 
-
-.hb-border-bottom-br3:hover::after {
+.hb-border-bottom-br3:hover::after, .inputfile + label:hover::after {
   width: 60%;
   height: 0px;
   border-width: 0px 2px 2px;
@@ -155,3 +158,50 @@ details {
   transition: border-top-width 0.1s ease 0s, height 0.2s ease 0.1s, width 0.2s ease 0.2s, margin 0.2s ease 0.2s;
 } 
 
+/* buttons end */
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.manual {
+  margin-top: 50px;
+  margin-left: 20px;
+}
+
+.manual__header {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+ol li {
+  margin-bottom: 10px;
+}
+
+ol li span {
+  font-size: 18px;
+  font-style: bold;
+}
+
+.tip span {
+  border-radius: 5px 5px 5px 5px;
+  visibility: hidden;
+  position: absolute;
+  left: 30%;
+  top: 150px;
+  background: #fff;
+  box-shadow: -2px 2px 10px -1px #333;
+  border-radius: 5px;
+}
+.tip:hover span {
+  visibility: visible;
+}
+
+#label1, #label2 {
+  width: 300px;
+}

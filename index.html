@@ -19,17 +19,13 @@
     <div class="wrapper">
       <div class="header">
         <form action="" class="data-base">
-          <h3 class="data-base__title title">
-            Загрузка базы данных по сотрудникам из 1С
-          </h3>
-          <p class="data-base__text"></p>
-          <input type="file" name="dataBase" id="dataBase" />
+          <!-- <p class="data-base__text"></p> -->
+          <input class="inputfile " type="file" name="dataBase" id="dataBase" />
+          <label id="label1" for="dataBase">Загрузить данные из 1С7</label>
         </form>
         <form action="" class="dinners-list">
-          <h3 class="dinners-list__title title">
-            Загрузка данных по обедам в формате CSV
-          </h3>
-          <input type="file" name="dinnersList" id="dinnersList" />
+          <input class="inputfile " type="file" name="dinnersList" id="dinnersList" />
+          <label id="label2" for="dinnersList">Загрузить данные из Senesys</label>
         </form>
       </div>
       <main class="main">
@@ -58,6 +54,16 @@
         </div>
         <div class="output"></div>
       </main>
+      <div class="manual">
+        <ol>
+          <li>
+            <span>1</span> В 1С7 выгрузить отчет <a class="tip" href="">Планирование выдачи подарков<span><img width="1200" src="./img/Report.png" alt=""></span></a>  или попросить его у Афонина Артема (afonin.a@artis21.ru, 4575)
+          </li>
+          <li><span>2</span> Выгрузить нужные данные из Senesys</li>
+          <li><span>3</span> Получившиеся файлы <a class="tip" href="">сохранить в формате CSV<span><img src="./img/SaveCSV.PNG" alt=""></span></a></li>
+          <li><span>4</span> Загрузить их через интерфейс программы</li>
+        </ol>
+      </div>
     </div>
     <script src="./script.js"></script>
   </body>

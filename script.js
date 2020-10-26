@@ -7,12 +7,13 @@ let rawDinners;
 let fileIsLoaded = false;
 const mainArrayOfCompanies = [];
 
-const formDBText = () => {
-  document.querySelector(
-    `.data-base__text`
-  ).textContent = `Последняя загрузка данных осуществлялась ${lastUpload}`;
-};
-formDBText();
+// const formDBText = () => {
+//   document.querySelector(
+//     `.data-base__text`
+//   ).textContent = `Последняя загрузка данных осуществлялась ${lastUpload}`;
+// };
+// formDBText();
+
 
 const thisDate = () => {
   const date = new Date();
@@ -250,41 +251,54 @@ const printFinalData = (str, company) => {
 //Emulcom
 const getEmul = () => {
   if (fileIsLoaded) {
+    document.querySelector('.manual').style.display = `none`;
     const rawEmul = Array.from(rawDinners).filter((el) => el[9] === `Эмульсии`);
     return getFinalData(rawEmul, `Эмульком`);
-  } else alert(`Загрузите данные по обедам`);
+  } else alert(`Загрузите данные из Senesys`);
 };
 
 //GoodWood
 const getGWD = () => {
   if (fileIsLoaded) {
+    document.querySelector('.manual').style.display = `none`;
     const rawGWD = Array.from(rawDinners).filter((el) => el[9] === `Гуд Вуд`);
     return getFinalData(rawGWD, `Гуд Вуд`);
-  } else alert(`Загрузите данные по обедам`);
+  } else alert(`Загрузите данные из Senesys`);
 };
 
 //Artis
 const getArtis = () => {
   if (fileIsLoaded) {
+    document.querySelector('.manual').style.display = `none`;
     const rawArtis = Array.from(rawDinners).filter((el) => {
       if (el[9] !== `Эмульсии` && el[9] !== `Гуд Вуд`) return el;
     });
     return getFinalData(rawArtis, `Артис`);
-  } else alert(`Загрузите данные по обедам`);
+  } else alert(`Загрузите данные из Senesys`);
 };
+
+const checkUpData = () => {
+  const today = thisDate();
+  console.log(today === lastUpload)
+  return today === lastUpload;
+}
 
 //load dinners list
 document.querySelector(`#dinnersList`).onchange = function () {
-  let file = this.files[0];
-  let reader = new FileReader();
-  fileIsLoaded = true;
-  reader.onload = function (progressEvent) {
-    rawDinners = this.result
-      .split(`\n`)
-      .map((el) => el.split(`;`))
-      .filter((el) => /\d\d\.\d\d\.\d\d\d\d/g.test(el[0]));
-  };
-  reader.readAsText(file, `windows-1251`);
+  if (checkUpData()) {
+    let file = this.files[0];
+    let reader = new FileReader();
+    fileIsLoaded = true;
+    reader.onload = function (progressEvent) {
+      rawDinners = this.result
+        .split(`\n`)
+        .map((el) => el.split(`;`))
+        .filter((el) => /\d\d\.\d\d\.\d\d\d\d/g.test(el[0]));
+    };
+    reader.readAsText(file, `windows-1251`);
+  } else {
+    alert(`Загрузите данные из 1С`)
+  }
 };
 
 //load database file
@@ -303,6 +317,7 @@ document.getElementById("dataBase").onchange = function () {
           ] = el[2])
         : null;
     });
+    lastUpload = thisDate();
     localStorage.setItem(`lastUploadDate`, JSON.stringify(thisDate()));
     localStorage.setItem(`artisDB`, JSON.stringify(artisDB));
   };
