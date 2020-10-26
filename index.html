@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Подсчёт обедов</title>
     <link rel="stylesheet" href="./css/reset.css" />
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   </head>
   <body>
     <div class="wrapper">
+      <div class="header">
       <form action="" class="data-base">
         <h3 class="data-base__title title">
           Загрузка базы данных по сотрудникам из 1С
@@ -22,31 +24,32 @@
         </h3>
         <input type="file" name="dinnersList" id="dinnersList" />
       </form>
+    </div>
       <main class="main">
-        <div class="artis-block">
-          <div class="artis-block__button button-block">
-            <button type="button" class="button" onclick="getArtis()">
-              Артис
-            </button>
-          </div>
-          <div class="artis-block__output output"></div>
+        <div class="buttons-block">
+          <button
+            type="button"
+            class="hbtn hb-border-bottom-br3"
+            onclick="getArtis()"
+          >
+            Артис
+          </button>
+          <button
+            type="button"
+            class="hbtn hb-border-bottom-br3"
+            onclick="getGWD()"
+          >
+            Гуд Вуд
+          </button>
+          <button
+            type="button"
+            class="hbtn hb-border-bottom-br3"
+            onclick="getEmul()"
+          >
+            Эмульком
+          </button>
         </div>
-        <div class="gwd-block">
-          <div class="gwd-block__button button-block">
-            <button type="button" class="button" onclick="getGWD()">
-              Гуд Вуд
-            </button>
-          </div>
-          <div class="gwd-block__output output"></div>
-        </div>
-        <div class="emul-block">
-          <div class="emul-block__button button-block">
-            <button type="button" class="button" onclick="getEmul()">
-              Эмульком
-            </button>
-          </div>
-          <div class="emul-block__output output"></div>
-        </div>
+        <div class="output"></div>
       </main>
     </div>
     <script src="./script.js"></script>

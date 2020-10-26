@@ -75,11 +75,11 @@ const getFinalData = (arr, str) => {
           if (arrImp[0] === arrData[0]) {
             if (arrImp[1] === arrData[1]) {
               arrImp.length > arrData.length
-                ? company.employees[imp].group = artisDB[data]
-                : (company.employees[imp].name = data,
-                  company.employees[imp].group = artisDB[data]);
+                ? (company.employees[imp].group = artisDB[data])
+                : ((company.employees[imp].name = data),
+                  (company.employees[imp].group = artisDB[data]));
             }
-          } 
+          }
         }
       }
     }
@@ -92,45 +92,85 @@ const getFinalData = (arr, str) => {
       company.totalTolal += company.employees[employee].marks[mark].meal;
     }
   }
-  for (employee in company.employees) {
-    const imp = company.employees[employee];
-    if (!company.groups.some(el => el.name === imp.group)) {
-      company.groups.push({name: imp.group, imps: [imp], groupTotal: imp.total})
-    } else {
-      company.groups.forEach(group => {
-        if (group.name === imp.group) {
-          group.imps.push(imp);
-          group.groupTotal += imp.total;
-        }
-      })
+  if (str === `Артис`) {
+    for (employee in company.employees) {
+      const imp = company.employees[employee];
+      if (!company.groups.some((el) => el.name === imp.group)) {
+        company.groups.push({
+          name: imp.group,
+          imps: [imp],
+          groupTotal: imp.total,
+        });
+      } else {
+        company.groups.forEach((group) => {
+          if (group.name === imp.group) {
+            group.imps.push(imp);
+            group.groupTotal += imp.total;
+          }
+        });
+      }
     }
-  };
+    company.groups.sort((a, b) => (a.name > b.name) ? 1 : (b.name > a.name) ? -1 : 0);
+    company.groups.forEach(group => {
+      group.imps.sort((a, b) => (a.name > b.name) ? 1 : (b.name > a.name) ? -1 : 0)
+    })
+  }
   for (group in company.groups) {
-    console.log(company.groups[group])
-    if (company.groups[group].name === undefined) company.groups[group].name = `Уволенные и т.д., необходима проверка:`
+    // console.log(company.groups[group]);
+    if (company.groups[group].name === undefined)
+      company.groups[group].name = `Уволенные и т.д., необходима проверка:`;
   }
   changeMainArray(mainArrayOfCompanies, company);
-  return printFinalData(arr, str, company);
+  return printFinalData(str, company);
 };
 
-const printFinalData = (arr, str, company) => {
-  const output =
-    str === `Артис`
-      ? document.querySelector(`.artis-block__output`)
-      : str === `Гуд Вуд`
-      ? document.querySelector(`.gwd-block__output`)
-      : document.querySelector(`.emul-block__output`);
-
+const printFinalData = (str, company) => {
+  const output = document.querySelector(`.output`);
   output.innerHTML = ``;
 
   if (str === `Артис`) {
+    //title
+    const companyTitle = document.createElement(`h1`);
+    companyTitle.classList.add(`company-title`);
+    companyTitle.innerHTML = `<div class="company-title__name">${str}</div><div class="company-title__total">${company.totalTolal}</div><button type="button" class="hbtn hb-border-bottom-br3 artis-dnld">Скачать</button>`;
+    output.appendChild(companyTitle);
+
+    //main list
+    const groupList = document.createElement(`ul`);
+    output.appendChild(groupList);
+    groupList.classList.add(`artis-group-list`);
+    company.groups.forEach((group) => {
+      const li = document.createElement(`li`);
+      groupList.appendChild(li);
+      const details = document.createElement(`details`);
+      li.appendChild(details);
+      const summary = document.createElement(`summary`);
+      summary.innerHTML = `<div>${group.name}</div><div class="to-right-border">${group.groupTotal}</div>`;
+      details.appendChild(summary);
+      const hiddenList = document.createElement(`ul`);
+      details.appendChild(hiddenList);
+      group.imps.forEach((imp) => {
+        const impLi = document.createElement(`li`);
+        hiddenList.appendChild(impLi);
+        const impDetails = document.createElement(`details`);
+        impLi.appendChild(impDetails);
+        const impSummary = document.createElement(`summary`);
+        impDetails.appendChild(impSummary);
+        const impHiddenList = document.createElement(`ul`);
+        impHiddenList.classList.add(`mark-list`);
+        impDetails.appendChild(impHiddenList);
+        impSummary.innerHTML = `<div>${imp.name}</div><div class="to-right-border">${imp.total}</div>`;
+        imp.marks.forEach((mark) => {
+          impHiddenList.innerHTML += `<li class="mark-list__li"><div class="item-date">${mark.date}</div><div class="item-meal">${mark.meal}</div></li>`;
+        });
+      });
+    });
   } else {
     //title
     const companyTitle = document.createElement(`h1`);
     companyTitle.classList.add(`company-title`);
-    companyTitle.innerHTML = `<div class="company-title__name">${str}</div><div class="company-title__total">${company.totalTolal}</div><button type="button" class="dnld">Скачать</button>`;
+    companyTitle.innerHTML = `<div class="company-title__name">${str}</div><div class="company-title__total">${company.totalTolal}</div><button type="button" class="hbtn hb-border-bottom-br3 dnld">Скачать</button>`;
     output.appendChild(companyTitle);
-
     //main list
     const employeeList = document.createElement(`ul`);
     employeeList.classList.add(`employee-list`);
@@ -147,7 +187,7 @@ const printFinalData = (arr, str, company) => {
       individualList.classList.add(`indi-list`);
       eaterLi.appendChild(individualList);
       const eaterTitle = document.createElement(`summary`);
-      eaterTitle.innerHTML = `<div class="eater">${eater}</div><div class="total">${employees[eater].total}</div>`;
+      eaterTitle.innerHTML = `<div class="eater">${eater}</div><div class="total to-right-border">${employees[eater].total}</div>`;
       individualList.appendChild(eaterTitle);
       const markList = document.createElement(`ul`);
       markList.classList.add(`mark-list`);
@@ -161,10 +201,34 @@ const printFinalData = (arr, str, company) => {
       employeeList.appendChild(eaterLi);
     }
   }
+
+  //download artis
+  if (str === `Артис`) {
+    const artisDnldButton = document.querySelector(`.artis-dnld`);
+    artisDnldButton.addEventListener(`click`, function () {
+      let csv = `${company.name};${company.totalTolal}`;
+      csv += `\n`;
+      const depts = company.groups;
+      depts.forEach((dept) => {
+        csv += `${dept.name};${dept.groupTotal}`;
+        csv += `\n`;
+        dept.imps.forEach((imp) => {
+          csv += `${imp.name};${imp.total}`;
+        });
+      });
+      var hiddenElement = document.createElement("a");
+      hiddenElement.href =
+        "data:text/csv;charset=utf-8," + encodeURI("\uFEFF" + csv);
+      hiddenElement.target = "_blank";
+      hiddenElement.download = `${company.name}.csv`;
+      hiddenElement.click();
+    });  
+  }
+
+  //download gwd and emul
   const buttons = document.querySelectorAll(`.dnld`);
   buttons.forEach((btn) => {
     btn.addEventListener(`click`, function () {
-      // console.log(company)
       let csv = `${company.name};${company.totalTolal}`;
       csv += `\n`;
       const employees = company.employees;
