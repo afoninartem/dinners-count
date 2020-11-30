@@ -1,19 +1,11 @@
 const artisDB = JSON.parse(localStorage.getItem(`artisDB`)) || {};
-const lastUpload =
+let lastUpload =
   JSON.parse(localStorage.getItem(`lastUploadDate`)) ||
   `никогда, загрузите данные`;
 //prepare to forming data
 let rawDinners;
 let fileIsLoaded = false;
 const mainArrayOfCompanies = [];
-
-// const formDBText = () => {
-//   document.querySelector(
-//     `.data-base__text`
-//   ).textContent = `Последняя загрузка данных осуществлялась ${lastUpload}`;
-// };
-// formDBText();
-
 
 const thisDate = () => {
   const date = new Date();
@@ -42,7 +34,7 @@ const getFinalData = (arr, str) => {
   company.employees = {};
   company.totalTolal = 0;
   arr.forEach((item) => {
-    const name = item[6]
+    const name = item[7]
       .split(` `)
       .filter((el) => el != ``)
       .join(` `);
@@ -54,12 +46,12 @@ const getFinalData = (arr, str) => {
         company.employees[name].total = 0;
         company.employees[name].marks.push({
           date: item[0],
-          meal: item[5] !== `` ? 2 : 1,
+          meal: item[6] !== `` ? 2 : 1,
         });
       } else {
         company.employees[name].marks.push({
           date: item[0],
-          meal: item[5] !== `` ? 2 : 1,
+          meal: item[6] !== `` ? 2 : 1,
         });
       }
     }
@@ -133,7 +125,7 @@ const printFinalData = (str, company) => {
     //title
     const companyTitle = document.createElement(`h1`);
     companyTitle.classList.add(`company-title`);
-    companyTitle.innerHTML = `<div class="company-title__name">${str}</div><div class="company-title__total">${company.totalTolal}</div><button type="button" class="hbtn hb-border-bottom-br3 artis-dnld">Скачать</button>`;
+    companyTitle.innerHTML = `<div class="company-title__name">${str}</div><div class="company-title__total">${company.totalTolal}</div><button type="button" class="hbtn hb-border-bottom-br3 artis-dnld">Скачать</button><button class="hbtn hb-border-bottom-br3 artis-print">Распечатать</button>`;
     output.appendChild(companyTitle);
 
     //main list
@@ -203,10 +195,10 @@ const printFinalData = (str, company) => {
     }
   }
 
-  //download artis
+  //output artis
   if (str === `Артис`) {
-    const artisDnldButton = document.querySelector(`.artis-dnld`);
-    artisDnldButton.addEventListener(`click`, function () {
+    //download artis
+    document.querySelector(`.artis-dnld`).addEventListener(`click`, function () {
       let csv = `Компания;${company.name};${company.totalTolal}`;
       csv += `\n`;
       const depts = company.groups;
@@ -224,7 +216,60 @@ const printFinalData = (str, company) => {
       hiddenElement.target = "_blank";
       hiddenElement.download = `${company.name}.csv`;
       hiddenElement.click();
-    });  
+    }); 
+    
+    const addPageRow = (name, meals, title) => {
+      const pageRow = document.createElement(`div`);
+      pageRow.classList.add(`page__row`);
+      const rowName = document.createElement(`div`);
+      rowName.classList.add(`cell`);
+      rowName.textContent = name;
+      const rowMeals = document.createElement(`div`);
+      rowMeals.classList.add(`cell`);
+      rowMeals.textContent = meals;
+      if (title) {
+        rowName.classList.add(`title`);
+        rowMeals.classList.add(`title`);
+      }
+      pageRow.appendChild(rowName);
+      pageRow.appendChild(rowMeals);
+      return pageRow;
+    }
+
+    //print artis
+    document.querySelector(`.artis-print`).addEventListener(`click`, function () {
+      const printBlock = document.querySelector(`.print`);
+      let page = document.createElement(`div`);
+      page.classList.add(`page`);
+      printBlock.appendChild(page);
+      let pageRows = 0;
+      const artis = mainArrayOfCompanies.filter(company => company.name === `Артис`)[0];
+      artis.groups.forEach(dept => {
+        const elem = addPageRow(dept.name, dept.groupTotal, true);
+        page.appendChild(elem);
+        pageRows += 1;
+        if (pageRows === 45) {
+          const newPage = document.createElement(`div`);
+          newPage.classList.add(`page`);
+          printBlock.appendChild(newPage);
+          pageRows = 0;
+          page = printBlock.lastChild;
+        }
+        dept.imps.forEach(imp => {
+          const elem =  addPageRow(imp.name, imp.total, false);
+          page.appendChild(elem);
+          pageRows += 1;
+          if (pageRows === 45) {
+            const newPage = document.createElement(`div`);
+            newPage.classList.add(`page`);
+            printBlock.appendChild(newPage);
+            pageRows = 0;
+            page = printBlock.lastChild;
+          }
+        })
+      });
+      print();
+    });
   }
 
   //download gwd and emul
@@ -252,7 +297,7 @@ const printFinalData = (str, company) => {
 const getEmul = () => {
   if (fileIsLoaded) {
     document.querySelector('.manual').style.display = `none`;
-    const rawEmul = Array.from(rawDinners).filter((el) => el[9] === `Эмульсии`);
+    const rawEmul = Array.from(rawDinners).filter((el) => el[10] === `Эмульсии`);
     return getFinalData(rawEmul, `Эмульком`);
   } else alert(`Загрузите данные из Senesys`);
 };
@@ -261,7 +306,7 @@ const getEmul = () => {
 const getGWD = () => {
   if (fileIsLoaded) {
     document.querySelector('.manual').style.display = `none`;
-    const rawGWD = Array.from(rawDinners).filter((el) => el[9] === `Гуд Вуд`);
+    const rawGWD = Array.from(rawDinners).filter((el) => el[10] === `Гуд Вуд`);
     return getFinalData(rawGWD, `Гуд Вуд`);
   } else alert(`Загрузите данные из Senesys`);
 };
@@ -271,15 +316,17 @@ const getArtis = () => {
   if (fileIsLoaded) {
     document.querySelector('.manual').style.display = `none`;
     const rawArtis = Array.from(rawDinners).filter((el) => {
-      if (el[9] !== `Эмульсии` && el[9] !== `Гуд Вуд`) return el;
+      if (el[10] !== `Эмульсии` && el[10] !== `Гуд Вуд`) return el;
     });
+    console.log(rawArtis)
     return getFinalData(rawArtis, `Артис`);
   } else alert(`Загрузите данные из Senesys`);
 };
 
 const checkUpData = () => {
   const today = thisDate();
-  console.log(today === lastUpload)
+  // console.log(today, lastUpload)
+  // console.log(today === lastUpload)
   return today === lastUpload;
 }
 
